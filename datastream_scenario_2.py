@@ -13,12 +13,12 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier, ExtraTreesClassifier, RandomForestClassifier
 
 df = pd.read_csv('datasets/movie.csv')
-
+# 20000  20000
 X_train, X_test, y_train, y_test = train_test_split(df['text'], df['label'], random_state=0, train_size=0.5)
 
 
 # 2000 data split into 4 part
-new_X_test = np.array_split(X_test, 10)
+new_X_test = np.array_split(X_test, 10) #[10] = [2000. 2000 ...]
 new_y_test = np.array_split(y_test, 10)
 result = {
     'accuracy': [],
@@ -66,3 +66,7 @@ for x in range(0, 10):
 
 import pdb;pdb.set_trace()
 # print(X_test)
+
+""""
+{'accuracy': [0.854, 0.853, 0.8405, 0.846, 0.835, 0.827, 0.813, 0.8405, 0.8315, 0.8175], 'f1': [0.8539886115900174, 0.8530229353026837, 0.8403839632807604, 0.8460583148674261, 0.835, 0.8270103814949352, 0.8126157240941541, 0.8404610807665597, 0.831391705034484, 0.8175011406252852], 'precision': [0.8542659720158977, 0.8533341783341784, 0.8407841215270357, 0.8462537523362942, 0.836711832916907, 0.827062113043539, 0.8138049558293987, 0.8405168269230769, 0.8315873053632568, 0.8177577871213455], 'recall': [0.854, 0.853, 0.8405, 0.846, 0.835, 0.827, 0.813, 0.8405, 0.8315, 0.8175]}
+"""
