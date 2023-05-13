@@ -1,5 +1,6 @@
 import threading
 import time
+import psutil
 import random
 
 import pandas as pd
@@ -60,9 +61,23 @@ def train(stop_event):
         time.sleep(duration_training)
 
 
+def record_performance(stop_event):
+    global performance, z
+    while not stop_event.is_set():
+        cpu = psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory().percent
+        print(f"PERFOMANCE : {z}  ---- CPU : {cpu} ---- Memory : {memory}", cpu)
+        z += 1
+        performance['cpu'].append(cpu)
+        performance['memory'].append(memory)
+
+        time.sleep(1)
+
+
 if __name__ == "__main__":
     x = 1
     y = 1
+    z = 1
     df = pd.read_csv('datasets/movie.csv')
     X_train, X_test, y_train, y_test = train_test_split(df['text'], df['label'], random_state=0, train_size=0.01)
     data = df.sample(random.randint(1, 100))
@@ -71,6 +86,10 @@ if __name__ == "__main__":
         'f1': [],
         'precision': [],
         'recall': []
+    }
+    performance = {
+        'cpu': [],
+        'memory': [],
     }
 
     textclassifier = Pipeline([
@@ -86,9 +105,10 @@ if __name__ == "__main__":
     event_stop = threading.Event()
     run_classification = True
     t1 = threading.Thread(target=validation, args=(event_stop,)).start()
+    t2 = threading.Thread(target=record_performance, args=(event_stop,)).start()
 
     time.sleep(duration_training)
-    t2 = threading.Thread(target=train, args=(event_stop,)).start()
+    t3 = threading.Thread(target=train, args=(event_stop,)).start()
     # t2.join()
 
     time.sleep(duration)
@@ -120,6 +140,17 @@ if __name__ == "__main__":
     plt.xlabel('Time Series')
     plt.ylabel('Percentage')
     plt.title('Time Series Graph')
-    plt.legent()
+    plt.legend()
     plt.show()
+    import pdb;pdb.set_trace()
+
+    x_axis = list(range(1, z))
+    plt.plot(x_axis, performance['cpu'], label="CPU")
+    plt.plot(x_axis, performance['memory'], label="Memory")
+    plt.xlabel('Time Series')
+    plt.ylabel('Percentage')
+    plt.title('Performance')
+    plt.legend()
+    plt.show()
+
     import pdb;pdb.set_trace()
