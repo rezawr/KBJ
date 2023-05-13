@@ -120,4 +120,6 @@ if __name__ == "__main__":
     plt.xlabel('Time Series')
     plt.ylabel('Percentage')
     plt.title('Time Series Graph')
+    plt.legent()
+    plt.show()
     import pdb;pdb.set_trace()
