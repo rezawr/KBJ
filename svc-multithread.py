@@ -18,7 +18,7 @@ from sklearn.svm import SVC
 
 
 # Duration in second
-duration = 301
+duration = 300
 duration_training = 60
 
 # Thread
