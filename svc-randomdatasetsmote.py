@@ -12,24 +12,23 @@ from sklearn.model_selection import cross_validate, train_test_split
 
 from sklearn.svm import SVC
 
-
 if __name__ == "__main__":
-    # from sklearn.metrics.get_scorer_names
-    df = pd.read_csv('datasets/movie.csv')
-    X_train, X_test, y_train, y_test = train_test_split(df['text'], df['label'], random_state=42, train_size=1000, test_size=20000)
-    
-    textclassifier = Pipeline([
-        ('vect', CountVectorizer()),
-        ('tfidf', TfidfTransformer()),
-        ('smote', SMOTE(random_state=12)),
-        ('svc', SVC(kernel='linear', C=1, random_state=0, verbose=1))
-    ])
+    for x in ([1000, 10000, 20000]):
+        df = pd.read_csv('datasets/movie.csv')
+        X_train, X_test, y_train, y_test = train_test_split(df['text'], df['label'], random_state=42, train_size=x)
+        
+        textclassifier = Pipeline([
+            ('vect', CountVectorizer()),
+            ('tfidf', TfidfTransformer()),
+            ('smote', SMOTE(random_state=12)),
+            ('svc', SVC(kernel='linear', C=1, random_state=0, verbose=1))
+        ])
 
-    # Init First Train
-    textclassifier.fit(X_train, y_train)
+        # Init First Train
+        textclassifier.fit(X_train, y_train)
 
-    # nb_pred = textclassifier.predict(X_test)
-    scoring = ['precision_macro', 'recall_macro', 'f1_macro', 'accuracy']
-    scores = cross_validate(textclassifier, df['text'], df['label'], scoring=scoring)
+        # nb_pred = textclassifier.predict(X_test)
+        scoring = ['precision_macro', 'recall_macro', 'f1_macro', 'accuracy']
+        scores = cross_validate(textclassifier, df['text'], df['label'], scoring=scoring)
 
-    import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
