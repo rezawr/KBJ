@@ -13,6 +13,8 @@ from sklearn.svm import SVC
 
 
 if __name__ == "__main__":
+    result = []
+
     for x in ([1000, 10000, 20000]):
         df = pd.read_csv('datasets/movie.csv')
         X_train, X_test, y_train, y_test = train_test_split(df['text'], df['label'], random_state=42, train_size=x)
@@ -30,4 +32,9 @@ if __name__ == "__main__":
         scoring = ['precision_macro', 'recall_macro', 'f1_macro', 'accuracy']
         scores = cross_validate(textclassifier, df['text'], df['label'], scoring=scoring)
 
-        import pdb;pdb.set_trace()
+        result.append({
+            'dataset': x,
+            'scores': scores
+        })
+
+    import pdb;pdb.set_trace()
